@@ -46,15 +46,21 @@ for (let i = 0; i < tableRows.length; i++) {
 let ascending = true;
 function sortRows(columnIndex) {
   rows.sort((rowA, rowB) => {
-    let cellA = rowA.cells[columnIndex].textContent.trim();
-    let cellB = rowB.cells[columnIndex].textContent.trim();
-
-    let valueA = parseFloat(cellA);
-    let valueB = parseFloat(cellB);
-    if (ascending) {
-      return valueA - valueB;
+    if (columnIndex === 0) {
+      return compareSymbols(rowA, rowB, ascending);
+    } else if (columnIndex === 6) {
+      return comparePayouts(rowA, rowB, ascending);
     } else {
-      return valueB - valueA;
+      let cellA = rowA.cells[columnIndex].textContent.trim();
+      let cellB = rowB.cells[columnIndex].textContent.trim();
+
+      let valueA = parseFloat(cellA);
+      let valueB = parseFloat(cellB);
+      if (ascending) {
+        return valueA - valueB;
+      } else {
+        return valueB - valueA;
+      }
     }
   });
 
@@ -71,3 +77,32 @@ headerRow.addEventListener("click", (event) => {
     sortRows(columnIndex);
   }
 });
+
+function compareSymbols(rowA, rowB, ascending) {
+  let symbolA = rowA.cells[0].textContent.trim();
+  let symbolB = rowB.cells[0].textContent.trim();
+  if (ascending) {
+    return symbolA.localeCompare(symbolB);
+  } else {
+    return symbolB.localeCompare(symbolA);
+  }
+}
+
+function comparePayouts(rowA, rowB, ascending) {
+  let payoutA = extractPayout(rowA.cells[6].textContent.trim());
+  let payoutB = extractPayout(rowB.cells[6].textContent.trim());
+
+  if (ascending) {
+    return payoutA - payoutB;
+  } else {
+    return payoutB - payoutA;
+  }
+}
+
+function extractPayout(payoutText) {
+  // Extract the payout value from the text (e.g., "Dividend=60%")
+  let startIndex = payoutText.indexOf("=") + 1;
+  let endIndex = payoutText.indexOf("%");
+  let payoutValue = parseFloat(payoutText.substring(startIndex, endIndex));
+  return payoutValue;
+}
