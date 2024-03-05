@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "Dividend Ratio Extension",
+  "version": "1.0",
+  "description": "Adds a Dividend to Price Ratio column to tables and allows sorting",
+  "action": {
+    "default_popup": "index.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.ksestocks.com/BookClosures"],
+      "js": ["./content.js"]
+    }
+  ],
+
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "permissions": ["activeTab", "scripting"]
+}
